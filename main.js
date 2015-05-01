@@ -1,11 +1,16 @@
-var Tile = function(src, tilemapX, tilemapY, animateLength){
+var Tile = function(src, tilemapX, tilemapY, options){
 	this.image = new Image();
 	this.image.src = src;
 	this.size = 16;
-	this.animateLength = animateLength - 1;
 
-	this.frame = 0;
+	this.settings = $.extend({
+		animationFrames: 0,
+		variations: 0
+	}, options);
 
+	this.animationFrame = 0;
+	this.variation = Math.floor(Math.random() * this.settings.variations);
+	
 	this.tilemap = {
 		x: tilemapX * this.size,
 		y: tilemapY * this.size
@@ -14,7 +19,7 @@ var Tile = function(src, tilemapX, tilemapY, animateLength){
 	this.render = function(ctx, x, y, frame){
 		ctx.drawImage(
 			this.image,
-			this.tilemap.x + (this.frame * this.size),
+			this.tilemap.x + ((this.animationFrame * this.size) || (this.variation * this.size)),
 			this.tilemap.y,
 			this.size,
 			this.size,
@@ -23,16 +28,32 @@ var Tile = function(src, tilemapX, tilemapY, animateLength){
 			this.size,
 			this.size
 		);	
+
+		this.nextFrame();
 	}
+
 	this.nextFrame = function(){
-		if(this.frame >= this.animateLength){
-			this.frame = 0;	
+		if(this.animationFrame >= this.settings.animationFrames){
+			this.animationFrame = 0;	
 		}
 		else{
-			this.frame++;
+			this.animationFrame++;
 		}
 	}
 };
+
+var getMatrix = function(numrows, numcols, initial){
+	var arr = [];
+	for (var i = 0; i < numrows; ++i){
+		var columns = [];
+		for (var j = 0; j < numcols; ++j){
+			columns[j] = initial;
+		}
+		arr[i] = columns;
+	}
+	return arr;
+}
+
 
 var Screen = new function(){
 
@@ -46,22 +67,25 @@ var Screen = new function(){
 
 	this.render = function(){
 
-		var grass = new Tile('res/tileset.png', 0, 0, 0);
-		var dirt = new Tile('res/tileset.png', 1, 0, 0);
-		var water = new Tile('res/tileset.png', 0, 1, 8);
+
+		var tilemap = getMatrix(width / scale / tileSize, height / scale / tileSize, null);
+
+
+		for( var x = 0; x < width / scale / tileSize; x ++){
+			for( var y = 0; y < height / scale / tileSize; y ++){
+				tilemap[x][y] = new Tile('res/tileset.png', 0, 0, {variations: 5});
+			}
+		}
+
 
 		setInterval(function(){
 
-			for( var x = 0; x < width / scale; x += tileSize){
-				for( var y = 0; y < height / scale; y += tileSize){
-					water.render(context, x, y);
+			for( var x = 0; x < width / scale / tileSize; x++){
+				for( var y = 0; y < height / scale / tileSize; y++){
+					tilemap[x][y].render(context, x * tileSize, y* tileSize);
 				}
 			}
-			
-			water.nextFrame();
-
-
-		}, 168);
+		}, 256);
 
 
 

@@ -1,17 +1,36 @@
 define(function(){
 
 	var Tile = new Class({
-		initialize:function(src, x, y, height, width, options){
+		initialize:function(src, x, y, options){
 			this.spriteSheet = new Image();
 			this.spriteSheet.src = src;
-			this.height = height || 0;
-			this.width = width || 0;
+			this.x = x;
+			this.y = y;
+			
+			this.height = 16;
+			this.width = 16;
+
+			this.options = $.extend({
+				variation: 0,
+				solid: false
+			}, options);
 
 		},
-		
-		render:function(ctx, x, y){
-		
+
+		render:function(ctx, dx, dy){
+			ctx.drawImage(
+				this.spriteSheet,
+				this.x * this.width,
+				this.y * this.height,
+				this.width,
+				this.height,
+				dx * this.width, 
+				dy * this.height,
+				this.width,
+				this.height
+			);	
 			
+
 		}
 	});
 
@@ -19,49 +38,3 @@ define(function(){
 
 
 });
-
-
-
-var Tile = function(src, tilemapX, tilemapY, options){
-	this.image = new Image();
-	this.image.src = src;
-	this.size = 16;
-
-	this.settings = $.extend({
-		animationFrames: 0,
-		variations: 0
-	}, options);
-
-	this.animationFrame = 0;
-	this.variation = Math.floor(Math.random() * this.settings.variations);
-
-	this.tilemap = {
-		x: tilemapX * this.size,
-		y: tilemapY * this.size
-	}
-
-	this.render = function(ctx, x, y){
-		ctx.drawImage(
-			this.image,
-			this.tilemap.x + ((this.animationFrame * this.size) || (this.variation * this.size)),
-			this.tilemap.y,
-			this.size,
-			this.size,
-			x, 
-			y,
-			this.size,
-			this.size
-		);	
-
-		this.nextFrame();
-	}
-
-	this.nextFrame = function(){
-		if(this.animationFrame >= this.settings.animationFrames){
-			this.animationFrame = 0;	
-		}
-		else{
-			this.animationFrame++;
-		}
-	}
-};

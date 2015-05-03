@@ -17,7 +17,7 @@ define(['jquery', 'src/tile', 'src/renderer'], function($, Tile, Renderer){
 			
 			this.renderer.clearCanvas();
 			this.renderer.drawTerrainMap();
-			this.renderer.drawPlayer();
+			this.renderer.drawPlayer(this.currentTime);
 		
 			requestAnimationFrame(this.tick.bind(this));
 

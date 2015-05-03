@@ -1,3 +1,27 @@
+define(function(){
+
+	var Tile = new Class({
+		initialize:function(src, x, y, height, width, options){
+			this.spriteSheet = new Image();
+			this.spriteSheet.src = src;
+			this.height = height || 0;
+			this.width = width || 0;
+
+		},
+		
+		render:function(ctx, x, y){
+		
+			
+		}
+	});
+
+	return Tile;
+
+
+});
+
+
+
 var Tile = function(src, tilemapX, tilemapY, options){
 	this.image = new Image();
 	this.image.src = src;

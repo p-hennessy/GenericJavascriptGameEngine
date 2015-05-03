@@ -1,3 +1,20 @@
+define(['lib/class', 'lib/jquery'], function() {
+    require(["src/game"], function(Game){
+		
+		var game = new Game();
+		game.start();
+		
+	
+	});
+});
+
+
+
+
+
+
+
+
 // Sprite
 // Player
 // Trainers
@@ -6,6 +23,9 @@
 // Tile
 // Terrain
 // Buildings
+
+
+
 
 
 
@@ -58,49 +78,7 @@ var Sprite = function(src){
 var Player = new Sprite('res/player.png');
 
 
-var Tile = function(src, tilemapX, tilemapY, options){
-	this.image = new Image();
-	this.image.src = src;
-	this.size = 16;
 
-	this.settings = $.extend({
-		animationFrames: 0,
-		variations: 0
-	}, options);
-
-	this.animationFrame = 0;
-	this.variation = Math.floor(Math.random() * this.settings.variations);
-
-	this.tilemap = {
-		x: tilemapX * this.size,
-		y: tilemapY * this.size
-	}
-
-	this.render = function(ctx, x, y){
-		ctx.drawImage(
-			this.image,
-			this.tilemap.x + ((this.animationFrame * this.size) || (this.variation * this.size)),
-			this.tilemap.y,
-			this.size,
-			this.size,
-			x, 
-			y,
-			this.size,
-			this.size
-		);	
-
-		this.nextFrame();
-	}
-
-	this.nextFrame = function(){
-		if(this.animationFrame >= this.settings.animationFrames){
-			this.animationFrame = 0;	
-		}
-		else{
-			this.animationFrame++;
-		}
-	}
-};
 
 var getMatrix = function(numrows, numcols, initial){
 	var arr = [];
@@ -168,66 +146,6 @@ document.onkeyup = function(e)
 	Player.animateStop();
 };
 
-var Screen = new function(){
-
-	var canvas = document.getElementById("canvas");
-	var context = canvas.getContext("2d");
-
-	var height = canvas.clientHeight;
-	var width = canvas.clientWidth;
-	var tileSize = 16;
-	var scale = 2;
-
-	this.render = function(){
-
-
-		var tilemap = getMatrix((width / scale / tileSize), (height / scale / tileSize), null);
-
-		for( var x = 0; x < (width / scale / tileSize); x++){
-			for( var y = 0; y <  (height / scale / tileSize); y++){
-
-				if( x == 0 || y == 0 || x == (width / scale / tileSize) - 1 || y == (height / scale / tileSize) - 1)
-					tilemap[x][y] = new Tile('res/tileset.png', 6, 0);
-				else
-					tilemap[x][y] = new Tile('res/tileset.png', 0, 0, {variations: 6});
-			}
-		}
-
-		setInterval(function(){
-
-			context.clearRect ( 0 , 0 , width, height );
-
-			for( var x = 0; x < (width / scale / tileSize); x++){
-				for( var y = 0; y <  (height / scale / tileSize); y++){
-					tilemap[x][y].render(context, (x + dx) * tileSize, (y + dy) * tileSize);
-				}
-			}
-
-
-			Player.render(context, 9 * 16, 7 * 16);
-			
-			if(down){
-				dy--;
-			}
-			if(up){
-				dy++;
-			}
-			if(left){
-				dx++;	
-			}
-			if(right){
-				dx--;	
-			}
-
-
-		}, 128);
-
-
-
-	}
-
-
-};
 
 
 var Game = new function(){
@@ -260,6 +178,6 @@ var Game = new function(){
 
 };
 
-/Game.run();
+//Game.run();
 
 

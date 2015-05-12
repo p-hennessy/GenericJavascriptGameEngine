@@ -11,7 +11,11 @@ define(['src/tile', 'src/entity', 'src/sprite'], function(Tile, Entity, Sprite){
 			this.width = this.canvas.clientWidth;
 						
 			this.player = new Entity( new Sprite('res/player.png', 20, 16) );
+			this.player.loadAnimation('walk_right', 4, 1);
+			this.player.loadAnimation('walk_down', 4, 2);
 			this.player.loadAnimation('walk_left', 4, 3);
+			this.player.loadAnimation('walk_up', 4, 4);
+			this.player.setAnimation('walk_down');
 		},
 
 		clearCanvas: function(){

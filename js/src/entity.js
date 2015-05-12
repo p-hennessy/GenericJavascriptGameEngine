@@ -4,24 +4,20 @@ define(["src/sprite", "src/animation"], function(Sprite, Animation){
 		initialize: function(sprite){
 			this.sprite = sprite;
 			this.setGridPosition(0,0);
-			this.direction = Direction.left;
 
-			this.animations = [];
+			this.animations = {};
 			this.currentAnimation = null;
-			this.animationX = 0;
-			this.animationY = 0;
-
 		},
 
-		getAnimationFrame: function(time){
-			this.currentAnimation = this.animations[0];
-			this.currentAnimation.update(time);
-			
-			return this.currentAnimation;
+		loadAnimation: function(name, length, row){
+			this.animations[name] = new Animation(name, length, row, this.sprite.width, this.sprite.height);
 		},
 		
-		loadAnimation: function(name, length, row){
-			this.animations.push(new Animation(name, length, row, this.sprite.width, this.sprite.height));
+		setAnimation: function(name){
+			if(this.animations[name])
+				this.currentAnimation = this.animations[name];
+			else
+				console.log('Animation: ' + name + ' not found for entity');
 		},
 
 		setGridPosition: function(x, y) {
@@ -31,7 +27,13 @@ define(["src/sprite", "src/animation"], function(Sprite, Animation){
 
 		getGridPosition: function(){
 			return { x: this.gridX, y: this.gridY };	
-		}
+		},
+
+		getAnimationFrame: function(time){
+			this.currentAnimation.update(time);
+			
+			return this.currentAnimation;
+		},
 	});
 
 	return Entity;

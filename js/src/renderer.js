@@ -9,10 +9,9 @@ define(['src/tile', 'src/entity', 'src/sprite'], function(Tile, Entity, Sprite){
 
 			this.height = this.canvas.clientHeight;
 			this.width = this.canvas.clientWidth;
-			
-			
+						
 			this.player = new Entity( new Sprite('res/player.png', 20, 16) );
-
+			this.player.loadAnimation('walk_left', 4, 3);
 		},
 
 		clearCanvas: function(){
@@ -35,24 +34,21 @@ define(['src/tile', 'src/entity', 'src/sprite'], function(Tile, Entity, Sprite){
 		},
 
 		drawPlayer: function(time){	
-			
-
 			var x = Math.floor( ((this.width / 2) / this.size) / 2);
 			var y = Math.floor( ((this.height / 2) / this.size) / 2);
 
 			this.player.setGridPosition(x, y);
-			this.drawEntity( this.player );
-			this.player.updateAnimation(time);
+			this.drawEntity(this.player, time);
 		},
 
-		drawEntity: function(entity){
+		drawEntity: function(entity, time){
 			var position = entity.getGridPosition();
-			var animation = entity.animationX;
+			var animation = entity.getAnimationFrame(time);
 			
 			this.context.drawImage(
 				entity.sprite.image,
-				animation * entity.sprite.width,
-				entity.direction * entity.sprite.height,
+				animation.currentFrame.x,
+				animation.currentFrame.y,
 				entity.sprite.width,
 				entity.sprite.height,
 				position.x,

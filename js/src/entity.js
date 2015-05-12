@@ -4,26 +4,24 @@ define(["src/sprite", "src/animation"], function(Sprite, Animation){
 		initialize: function(sprite){
 			this.sprite = sprite;
 			this.setGridPosition(0,0);
-			this.direction = Direction.down;
+			this.direction = Direction.left;
 
+			this.animations = [];
+			this.currentAnimation = null;
 			this.animationX = 0;
 			this.animationY = 0;
 
 		},
 
-		updateAnimation: function(time){			
-			if(time - this.lastTick < 100){
-				return;
-			}
-
-			if(this.animationX >= 3){
-				this.animationX = 0;
-			}
-			else
-				this.animationX++;
-
-			this.lastTick = Date.now();
-
+		getAnimationFrame: function(time){
+			this.currentAnimation = this.animations[0];
+			this.currentAnimation.update(time);
+			
+			return this.currentAnimation;
+		},
+		
+		loadAnimation: function(name, length, row){
+			this.animations.push(new Animation(name, length, row, this.sprite.width, this.sprite.height));
 		},
 
 		setGridPosition: function(x, y) {
